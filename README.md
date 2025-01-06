@@ -1,109 +1,116 @@
-Name: FORAM KANTHARIA
-Student Number: 101330616
+# Restaurant Management System
 
-List of Files:
-FOLDER: assignment4.zip
+This project simulates a restaurant's operations using multi-threading and a client-server model. It allows handling orders, assigning drivers for deliveries, and managing the restaurant's menu and driver statuses. The program is implemented in C with the use of `pthread` for concurrency and socket programming for communication. The project was a part of 'Introductin to Systems Programming' course taken at Carleton University.
 
-Folders Inside Folder: 
+---
 
-1. a4p1:
-Files inside:
-1. restaurant.c
-2. restaurant.h
-3. main.c
-4. Makefile 
+## Features
 
-2. a4p2:
-Files inside:
-1. restaurant.c
-2. restaurant.h
-3. main.c
-4. command.c
-5. customer.c
-6. orderHandler.c
-7. Makefile 
+1. **Order Management**
+   - Customers can place orders, and they are queued for delivery.
+   - Orders contain customer information, selected menu items, and their total price.
 
-3. avp3:
-Files inside:
-1. restaurant.c
-2. restaurant.h
-3. main.c
-4. command.c
-5. customer.c
-6. orderHandler.c
-7. driverHandler.c
-8. Makefile 
+2. **Driver Management**
+   - Drivers pick up orders from the queue and deliver them.
+   - Driver statuses are updated in real-time:
+     - `WAITING` - Ready to pick up an order.
+     - `ON_ROUTE` - Delivering an order.
+     - `DELIVERING` - Completing the delivery.
+     - `RETURNING` - Returning to the restaurant.
 
+3. **Queue System**
+   - A thread-safe queue ensures orders are processed in the order they are received.
 
-Purpose of each file, compilation and execution instructions:
+4. **Menu Management**
+   - The restaurant has a predefined menu with items and prices.
 
-a4p1 folder:
+5. **Concurrency**
+   - Separate threads handle incoming requests, driver actions, and restaurant operations.
 
-1. restaurant.h: The defs.h header file contains the constants and data types that the program must use
+6. **Server Communication**
+   - The server listens for requests, processes commands (e.g., place orders, print orders), and responds to clients.
 
-2. main.c: This file handles execution of the program.
+---
 
-3. restaurant.c: This file contains all the necessary functions like deliverOrder, printAllOrders etc.. used to execute this program.
+## How It Works
 
-4. Makefile: This file compiles each individual .c file into  corresponding object file linking them into one executable.
+### Main Components
 
-a4p2 folder:
+- **Restaurant (`restaurant.h`)**
+  - Manages the menu, order queue, and driver statuses.
+  
+- **Order Handler (`orderHandler.c`)**
+  - Handles incoming order requests from customers via sockets.
+  - Adds valid orders to the queue.
 
-1. restaurant.h: The defs.h header file contains the constants and data types that the program must use
+- **Driver Handler (`driverHandler.c`)**
+  - Simulates driver actions, including picking up, delivering, and returning from orders.
 
-2. main.c: This file handles execution of the program.
+- **Main Program (`main.c`)**
+  - Initializes the restaurant and spawns threads for order handling and driver management.
+  - Waits for threads to complete on shutdown.
 
-3. restaurant.c: This file contains all the necessary functions like deliverOrder, printAllOrders etc.. used to execute this program.
+---
 
-4. Makefile: This file compiles each individual .c file into  corresponding object file linking them into one executable.
+## Getting Started
 
-5. customer.c: This file handles customer inputs and communicates with the server and outputs the order and other necessary details 
+### Prerequisites
 
-6. command.c: This file handles commands orders, deliver, drivers and shutdown
+- GCC or a compatible C compiler.
+- POSIX-compatible operating system for `pthread` support.
 
-7. orderHandler.c: Tis file handles the server logic i.e. takes orders, print them, delivers them etc. It is the main file that allows client communication with the system and processes them.
+### Build Instructions
 
-avp3 folder: 
-1. restaurant.h: The defs.h header file contains the constants and data types that the program must use
+1. Open a terminal and navigate to the project directory.
+2. Compile the program using the provided Makefile:
+   ```bash
+   make
+   ```
 
-2. main.c: This file handles execution of the program.
+### Run Instructions
 
-3. restaurant.c: This file contains all the necessary functions like deliverOrder, printAllOrders etc.. used to execute this program.
+1. Start the server:
+   ```bash
+   ./main
+   ```
+2. Interact with the server using a client program or manually send requests via tools like `telnet`.
 
-4. Makefile: This file compiles each individual .c file into  corresponding object file linking them into one executable.
+---
 
-5. customer.c: This file handles customer inputs and communicates with the server and outputs the order and other necessary details 
+## Code Overview
 
-6. command.c: This file handles commands orders, deliver, drivers and shutdown
+### Files
 
-7. orderHandler.c: This file handles the server logic i.e. takes orders, print them, delivers them etc. It is the main file that allows client communication with the system and processes them.
+- `main.c`: Entry point, initializes the restaurant and threads.
+- `restaurant.c`: Core restaurant functionality, including menu and queue management.
+- `driverHandler.c`: Handles driver threads and their actions.
+- `orderHandler.c`: Processes incoming order requests.
+- `restaurant.h`: Defines key structures and constants.
 
-8. driverHandler.c: This file handles threading of drivers and the functionality of automatically handling of deliveries by driver.
+### Key Structures
 
-Compilation and Execution:
-1. Download the folder assignment4.zip
-2. Extract all folders from the main folder
-3. open your terminal and type cd name of directory where you stored the folders 
+- **`Order`**: Represents a customer order, including items and total price.
+- **`Driver`**: Tracks driver statuses and their current order.
+- **`Queue`**: Thread-safe order queue.
 
-To run a4p1:
-1. Once in the directory, type cd a4p1
-2. Once in the a4p1 directory, type make
-3. Then type ./a4
-4. The program will now run and you can input your desired selections as per the options displayed 
+### Thread Synchronization
 
-To run a4p2:
-1. Once in directory, type cd a4p2
-2. Once in the a4p1 directory, type make
-3. Then type ./a4 &
-4. The program will now run and you can type ./customer <name> <item number> <item number> to add an order. If you want to print orders, drivers or deliver or shutdown type ./command orders to print orders, ./command drivers to print drivers, ./command deliver to deliver order, and ./command shutdown to shutdown the system 
+- Mutexes (`pthread_mutex_t`) ensure safe access to shared resources, like the order queue.
 
-To run avp3:
-1. Once in directory, type cd avp3
-2. Once in the avp3 directory, type make
-3. Then type ./a4 and the program will start running with printing drivers that are waiting for an order
-4. Open another terminal go to the avp3 directory same as earlier and then type make
-5. Then type ./customer <name> <item name><item name> to add an order and then if you see the previous terminal, the order will automatically be delivered
-6. If you need to run any commands, you can run it from the second terminal as well
+---
 
+## Example Output
 
+When running, the program outputs real-time updates, such as:
+- New orders received.
+- Drivers picking up, delivering, and completing orders.
+- Orders added to the queue or processed.
 
+---
+
+## Future Enhancements
+
+- A graphical interface for better visualization.
+- Expand functionality to include customer feedback and delivery tracking.
+
+---
